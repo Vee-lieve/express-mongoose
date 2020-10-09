@@ -1,22 +1,42 @@
 const Users = require("../models/users.model")
 
-class UserControl {
-    GetUser(callback) {
-        Users.find({}).then(response => {
-            callback(response)
+module.exports = {
+    GetUser(req, res) {
+        Users.find({}, { __v: false }).then(response => {
+            res.json(response)
         }).catch(err => {
-            callback(err)
+            res.json(err)
         })
-    }
-    SaveUser(data, callback) {
-        console.log(data)
-        let newUser = new Users(data)
+    },
+    GetUserById(req, res) {
+        Users.find({_id: req.params.id}, { __v: false }).then(response => {
+            res.json(response)
+        }).catch(err => {
+            res.json(err)
+        })
+    },
+    SaveUser(req, res) {
+        let newUser = new Users(req.body)
         newUser.save().then(response => {
-            callback(response)
+            res.json(response)
         }).catch(err => {
-            callback(err)
+            res.json(err)
+        })
+    },
+    UpdateUser(req, res) {
+        let data = req.body
+        Users.findByIdAndUpdate(data.id, data).then(response => {
+            res.json(response)
+        }).catch(err => {
+            res.json(err)
+        })
+    },
+    DeleteUser(req, res) {
+        let id = req.params.id
+        Users.findByIdAndRemove(id).then(response => {
+            res.json(response)
+        }).catch(err => {
+            res.json(err)
         })
     }
-}
-
-module.exports = UserControl;
+};
