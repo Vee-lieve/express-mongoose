@@ -4,17 +4,19 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 
-//const url = 'mongodb+srv://badgebookdb:badgebookdb2019@cluster0-pn3a6.mongodb.net/test?retryWrites=true&w=majority'
-var url = 'mongodb://127.0.0.1/asmsi'
-mongoose.set('useCreateIndex', true);
-mongoose.set('useFindAndModify', false);
+const atlasUrl = 'mongodb+srv://badgebookdb:badgebookdb2019@cluster0-pn3a6.mongodb.net/test?retryWrites=true&w=majority'
+const localUrl = 'mongodb://127.0.0.1/asmsi'
 
+const useAtlas = false
+let url = useAtlas ? atlasUrl : localUrl
 mongoose
     .connect(url, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: true
     })
-    .then(() => console.log('DB Connected!'))
+    .then(() => console.log('DB Connected! ' + url))
     .catch(err => {
         console.log(err);
         console.log('CONNECTION ERROR!');
